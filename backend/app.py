@@ -1,8 +1,9 @@
 import os
 import sqlite3
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
-
+from flask_cors import CORS
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
+CORS(app, origins=["https://myportfolio-neon-kappa.vercel.app"])
 app.secret_key = 'super_secret_agency_key_change_in_production'
 DATABASE = 'portfolio.db'
 
