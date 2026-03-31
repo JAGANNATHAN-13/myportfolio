@@ -5,8 +5,20 @@
       "dest": "/static/$1"
     },
     {
-      "src": "/admin",
-      "dest": "/templates/admin.html"
+      "src": "/admin(.*)",
+      "dest": "https://myportfolio-653w.onrender.com/admin$1"
+    },
+    {
+      "src": "/login(.*)",
+      "dest": "https://myportfolio-653w.onrender.com/login$1"
+    },
+    {
+      "src": "/logout(.*)",
+      "dest": "https://myportfolio-653w.onrender.com/logout$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "https://myportfolio-653w.onrender.com/api/$1"
     },
     {
       "src": "/projects",
