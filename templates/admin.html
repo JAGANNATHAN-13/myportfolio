@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        /* Override global hidden cursor just for the admin page */
+        * { cursor: auto !important; }
+        input, textarea, select { cursor: text !important; }
+        button, a { cursor: pointer !important; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ciaBlack: '#0a0a0a',
+                        ciaRed: '#d30000',
+                    },
+                    fontFamily: {
+                        mono: ['"Share Tech Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-ciaBlack text-ciaRed font-mono flex items-center justify-center min-h-screen relative p-4">
+    {% if view == 'login' %}
+    <div class="border border-ciaRed p-8 shadow-[0_0_15px_rgba(211,0,0,0.5)] w-full max-w-md bg-black/80 backdrop-blur-sm z-10 relative">
+        <div class="absolute top-0 left-0 w-full h-1 bg-ciaRed/30"></div>
+        <h2 class="text-2xl mb-6 text-center tracking-widest text-shadow-red">[ AUTH_REQUIRED ]</h2>
+        {% if error %}
+        <p class="text-ciaRed mb-4 text-center text-sm animate-pulse border border-ciaRed/50 p-2 bg-ciaRed/10">{{ error }}</p>
+        {% endif %}
+        <form method="POST" action="/admin">
+            <div class="mb-4">
+                <label class="block mb-2 text-xs opacity-70">USERNAME</label>
+                <input type="text" name="username" class="w-full bg-ciaBlack border border-red-900 p-3 text-red-500 focus:outline-none focus:border-ciaRed focus:shadow-[0_0_10px_rgba(211,0,0,0.5)] transition-all" required>
+            </div>
+            <div class="mb-8">
+                <label class="block mb-2 text-xs opacity-70">PASSWORD</label>
+                <input type="password" name="password" class="w-full bg-ciaBlack border border-red-900 p-3 text-red-500 focus:outline-none focus:border-ciaRed focus:shadow-[0_0_10px_rgba(211,0,0,0.5)] transition-all" required>
+            </div>
+            <button type="submit" class="w-full bg-red-900/20 border border-ciaRed py-3 hover:bg-ciaRed hover:text-black transition-all font-bold tracking-widest">[ INITIATE_LOGIN ]</button>
+        </form>
+    </div>
+    {% else %}
+    <!-- Dashboard -->
+    <div class="w-full max-w-6xl p-8 z-10">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 border-b border-red-900 pb-4">
+            <h1 class="text-3xl tracking-widest text-shadow-red mb-4 md:mb-0">[ SYSTEM_DATABASE ]</h1>
+            <a href="/admin/logout" class="border border-ciaRed px-4 py-2 hover:bg-ciaRed hover:text-black transition-all text-sm font-bold">[ TERMINATE_SESSION ]</a>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="col-span-1 border border-red-900 bg-black/50 p-6 h-fit relative">
+                <div class="absolute top-0 right-0 w-2 h-2 bg-ciaRed rounded-full animate-ping m-2"></div>
+                <h3 class="text-xl mb-6 border-b border-red-900/50 pb-2 flex items-center" id="form-title">
+                    <span class="mr-2">&gt;</span> [ ADD_RECORD ]
+                </h3>
+                <form id="project-form" class="space-y-4">
+                    <input type="hidden" id="project-id">
+                    <div>
+                        <label class="block mb-1 text-xs opacity-80">TITLE</label>
+                        <input type="text" id="title" class="w-full bg-ciaBlack border border-red-900 p-2 focus:outline-none focus:border-ciaRed text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-xs opacity-80">DESCRIPTION</label>
+                        <textarea id="description" class="w-full bg-ciaBlack border border-red-900 p-2 h-24 focus:outline-none focus:border-ciaRed text-sm" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-xs opacity-80">TECH_STACK</label>
+                        <input type="text" id="tech_stack" class="w-full bg-ciaBlack border border-red-900 p-2 focus:outline-none focus:border-ciaRed text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-xs opacity-80">IMAGE_URL</label>
+                        <input type="text" id="image_url" class="w-full bg-ciaBlack border border-red-900 p-2 focus:outline-none focus:border-ciaRed text-sm">
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-xs opacity-80">DEMO_LINK</label>
+                        <input type="text" id="demo_link" class="w-full bg-ciaBlack border border-red-900 p-2 focus:outline-none focus:border-ciaRed text-sm">
+                    </div>
+                    <div class="pt-4 flex flex-col gap-2">
+                        <button type="submit" class="w-full bg-red-900/30 border border-ciaRed py-2 hover:bg-ciaRed hover:text-black transition-all text-sm font-bold">[ COMMIT_TO_DB ]</button>
+                        <button type="button" id="cancel-edit" class="w-full border border-gray-700 text-gray-500 py-2 hover:text-white transition-all text-sm hidden">ABORT_EDIT</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="col-span-1 lg:col-span-2 space-y-4">
+                <div class="flex items-center text-xl mb-6">
+                    <span class="mr-2 animate-pulse">●</span> ARCHIVE_STORE
+                </div>
+                {% for project in projects %}
+                <div class="border border-red-900/50 bg-black/40 p-5 flex flex-col sm:flex-row justify-between sm:items-center hover:border-ciaRed transition-all group">
+                    <div class="mb-4 sm:mb-0">
+                        <h4 class="text-lg font-bold text-gray-300 group-hover:text-white">{{ project.title }}</h4>
+                        <p class="text-xs text-red-500/80 mt-1">SYS_ID: {{ project.id }} // {{ project.tech_stack }}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editProject({{ project.id }}, '{{ project.title|replace("'", "\\'") }}', '{{ project.description|replace("'", "\\'")|replace("\n", "\\n") }}', '{{ project.tech_stack|replace("'", "\\'") }}', '{{ project.image_url|replace("'", "\\'") }}', '{{ project.demo_link|replace("'", "\\'") }}')" class="px-3 py-1 bg-gray-900 border border-red-900 hover:border-ciaRed hover:text-white transition-all text-xs">[ MODIFY ]</button>
+                        <button onclick="deleteProject({{ project.id }})" class="px-3 py-1 bg-red-900/20 border border-red-900 hover:bg-ciaRed hover:text-black transition-all text-xs">[ DROP ]</button>
+                    </div>
+                </div>
+                {% else %}
+                <div class="border border-dashed border-red-900 p-10 text-center opacity-50">
+                    <p class="text-sm">NULL_DATASET</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/admin.js"></script>
+    {% endif %}
+</body>
+</html>

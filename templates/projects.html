@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects Showcase | Jagannathan M</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ciaBlack: '#0a0a0a',
+                        ciaRed: '#d30000',
+                    },
+                    fontFamily: {
+                        mono: ['"Share Tech Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in { animation: fadeIn 1s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        * { cursor: auto !important; }
+        .pointer { cursor: pointer !important; }
+    </style>
+</head>
+<body class="bg-ciaBlack text-gray-300 font-mono min-h-screen relative p-6 md:p-12 fade-in">
+    <div class="crt-overlay"></div>
+    <div class="noise-overlay"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+        <nav class="flex justify-between items-center mb-16 border-b border-gray-800 pb-4">
+            <h1 class="text-3xl tracking-widest text-white font-bold text-shadow-red">[ PROJECT SHOWCASE ]</h1>
+            <a href="/" class="border border-ciaRed text-ciaRed px-6 py-2 hover:bg-ciaRed hover:text-black transition-all text-sm font-bold pointer">[ RETURN TO HOME ]</a>
+        </nav>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for project in projects %}
+            <div class="border border-gray-800/80 hover:border-ciaRed transition-all p-1 group bg-white/5 pointer" onclick="window.open('{{ project.demo_link }}', '_blank')">
+                <div class="h-full bg-black flex flex-col relative overflow-hidden">
+                    
+                    <div class="h-48 relative overflow-hidden bg-gray-900 border-b border-gray-800">
+                        {% if project.image_url %}
+                        <img src="{{ project.image_url }}" alt="{{ project.title }}" class="w-full h-full object-cover opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 grayscale group-hover:grayscale-0">
+                        {% else %}
+                        <div class="absolute inset-0 flex flex-col items-center justify-center m-2">
+                            <span class="text-ciaRed mb-2 font-bold text-2xl">&lt;/&gt;</span>
+                            <span class="text-gray-500 tracking-widest text-xs font-bold">[ SEE SOURCE CODE ]</span>
+                        </div>
+                        {% endif %}
+                        <div class="absolute top-3 left-3 bg-black/80 text-ciaRed border border-ciaRed px-2 py-1 text-[10px] font-bold z-10">DEPLOYED</div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 z-20 backdrop-blur-sm">
+                            <span class="border border-white text-white px-4 py-2 text-sm font-bold hover:bg-white hover:text-black transition-colors">[ VIEW LIVE URL ]</span>
+                        </div>
+                    </div>
+
+                    <div class="p-6 flex-grow flex flex-col justify-between relative z-30 bg-gradient-to-t from-gray-900 to-transparent">
+                        <div>
+                            <h3 class="text-xl text-white font-bold group-hover:text-ciaRed transition-colors mb-3 uppercase tracking-wide">{{ project.title }}</h3>
+                            <p class="text-sm text-gray-400 mb-6 leading-relaxed">{{ project.description }}</p>
+                        </div>
+                        <div class="text-xs text-gray-500 border-t border-gray-800 pt-4 flex flex-col gap-2">
+                            <span class="text-ciaRed font-bold">TECH_STACK:</span>
+                            <span class="bg-gray-900 px-2 py-1 rounded-sm w-fit border border-gray-800">{{ project.tech_stack }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-span-full border border-dashed border-red-900/50 p-20 text-center">
+                <p class="text-ciaRed tracking-widest font-bold text-xl">NO_PROJECTS_FOUND</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
