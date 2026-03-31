@@ -260,4 +260,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-});
+});// existing code (animations, cursor, etc...)
+
+// 👇 PASTE HERE AT END
+
+fetch("https://myportfolio-653w.onrender.com/api/projects")
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById("projects");
+
+    container.innerHTML = "";
+
+    data.forEach(project => {
+      const card = document.createElement("div");
+
+      card.className = "project-card border border-gray-800/80 p-1 group transition-all duration-500 hover:border-red-600 bg-white/5";
+
+      card.innerHTML = `
+        ...
+      `;
+
+      container.appendChild(card);
+    });
+  })
+  .catch(err => console.error("Error:", err));
