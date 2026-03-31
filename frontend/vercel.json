@@ -1,5 +1,12 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/templates/index.html" }
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/templates/index.html"
+    }
   ]
 }
