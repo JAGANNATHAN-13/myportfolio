@@ -284,3 +284,33 @@ fetch("https://myportfolio-653w.onrender.com/api/projects")
     });
   })
   .catch(err => console.error("Error:", err));
+  // your existing code (animations, cursor, etc...)
+
+
+// 🔥 PASTE HERE AT VERY BOTTOM
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  fetch("https://myportfolio-653w.onrender.com/api/projects")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("projects");
+
+      container.innerHTML = "";
+
+      data.forEach(project => {
+        const card = document.createElement("div");
+
+        card.className = "project-card border border-gray-800 p-4";
+
+        card.innerHTML = `
+          <h2 class="text-white text-xl">${project.title}</h2>
+          <p class="text-gray-400">${project.description}</p>
+        `;
+
+        container.appendChild(card);
+      });
+    })
+    .catch(err => console.error("Error:", err));
+
+});
