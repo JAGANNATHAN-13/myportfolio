@@ -5,6 +5,14 @@
       "dest": "/static/$1"
     },
     {
+      "src": "/admin",
+      "dest": "/templates/admin.html"
+    },
+    {
+      "src": "/projects",
+      "dest": "/templates/projects.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/templates/index.html"
     }
