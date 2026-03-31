@@ -38,25 +38,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Cursor Follower ---
     const cursor = document.getElementById('cursor');
     const follower = document.getElementById('cursor-follower');
-    
-    let mouseX = 0, mouseY = 0;
-    let currX = 0, currY = 0;
-    
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        
-        cursor.style.left = mouseX + 'px';
-        cursor.style.top = mouseY + 'px';
-    });
-    
-    // Smooth follow for the outer ring using GSAP ticker
-    gsap.ticker.add(() => {
-        currX += (mouseX - currX) * 0.15;
-        currY += (mouseY - currY) * 0.15;
-        follower.style.left = currX + 'px';
-        follower.style.top = currY + 'px';
-    });
+
+    // Only run cursor on desktop, hide on mobile/touch
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        let mouseX = 0, mouseY = 0;
+        let currX = 0, currY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        gsap.ticker.add(() => {
+            currX += (mouseX - currX) * 0.15;
+            currY += (mouseY - currY) * 0.15;
+            follower.style.left = currX + 'px';
+            follower.style.top = currY + 'px';
+        });
+    } else {
+        // Mobile — hide cursor elements completely
+        if (cursor) cursor.style.display = 'none';
+        if (follower) follower.style.display = 'none';
+    }
 
     // Interactive elements hover logic
     const interactives = document.querySelectorAll('.interactive, a, button, .project-card, .skill-card');
