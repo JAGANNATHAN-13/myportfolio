@@ -154,6 +154,31 @@ body.hovering .custom-cursor-follower {
     z-index: 9989;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
+
+/* Project Cards - Responsive */
+#projects {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    #projects {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    #projects {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+#projects .project-card {
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+}
 @media (hover: none) and (pointer: coarse) {
     * {
         cursor: none !important;

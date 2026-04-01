@@ -216,106 +216,55 @@ document.addEventListener('DOMContentLoaded', () => {
     if(contactForm) {
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = contactForm.querySelector('button');
-            const submitText = document.getElementById('submit-text');
-            const statusDiv = document.getElementById('contact-status');
             
             const name = document.getElementById('contact-name').value;
             const email = document.getElementById('contact-email').value;
             const message = document.getElementById('contact-message').value;
             
-            submitText.textContent = '[ ENCRYPTING... ]';
-            playTypeSound();
+            const subject = encodeURIComponent(`Portfolio Contact from ${name}`);
+            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
             
-            try {
-                const res = await fetch('/api/contact', {
-                    method: 'POST',
-                    headers: {'Content-Type':'application/json'},
-                    body: JSON.stringify({name, email, message})
-                });
-                const data = await res.json();
-                
-                if(data.success) {
-                    submitText.textContent = '[ TRANSMISSION_SUCCESSFUL ]';
-                    btn.classList.add('bg-green-900', 'border-green-500', 'text-green-500');
-                    btn.classList.remove('border-ciaRed', 'text-ciaRed');
-                    
-                    statusDiv.innerHTML = 'DATA SECURELY TRANSMITTED.';
-                    statusDiv.className = 'text-center text-sm font-bold border border-green-500 text-green-500 p-2 mt-4 bg-green-900/20 blink';
-                    statusDiv.classList.remove('hidden');
-                    
-                    playBeep(1500, 'sine', 0.2);
-                    contactForm.reset();
-                    
-                    setTimeout(() => {
-                        submitText.textContent = '[ EXECUTE_TRANSMISSION ]';
-                        btn.classList.remove('bg-green-900', 'border-green-500', 'text-green-500');
-                        btn.classList.add('border-ciaRed', 'text-ciaRed');
-                        statusDiv.classList.add('hidden');
-                    }, 5000);
-                }
-            } catch(e) {
-                console.error(e);
-                submitText.textContent = '[ TRANSMISSION_FAILED ]';
-                statusDiv.innerHTML = 'ERROR: PACKET LOSS DETECTED.';
-                statusDiv.className = 'text-center text-sm font-bold border border-ciaRed text-ciaRed p-2 mt-4 blink';
-                statusDiv.classList.remove('hidden');
-                playBeep(200, 'square', 0.5);
-            }
+            window.location.href = `mailto:jaganeleven2006@gmail.com?subject=${subject}&body=${body}`;
         });
     }
 
-});// existing code (animations, cursor, etc...)
+    // --- Load Projects ---
+    fetch("/api/projects")
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("projects");
 
-// 👇 PASTE HERE AT END
+        if (!container) return;
 
-fetch("https://myportfolio-653w.onrender.com/api/projects")
-  .then(res => res.json())
-  .then(data => {
-    const container = document.getElementById("projects");
+        container.innerHTML = "";
 
-    container.innerHTML = "";
+        data.forEach(project => {
+          const card = document.createElement("div");
 
-    data.forEach(project => {
-      const card = document.createElement("div");
+          card.className = "project-card border border-gray-800/80 p-6 group transition-all duration-500 hover:border-ciaRed bg-gray-900/50 hover:bg-gray-900 cursor-pointer relative overflow-hidden min-h-[200px]";
 
-      card.className = "project-card border border-gray-800/80 p-1 group transition-all duration-500 hover:border-red-600 bg-white/5";
+          const demoLink = project.demo_link ? `
+            <a href="${project.demo_link}" target="_blank" class="inline-block mt-4 px-4 py-2 bg-ciaRed text-white text-sm font-bold hover:bg-ciaRedLight transition-colors">
+              VIEW PROJECT
+            </a>
+          ` : '';
 
-      card.innerHTML = `
-        ...
-      `;
+          card.innerHTML = `
+            <div class="absolute top-0 left-0 w-1 h-full bg-ciaRed transform -translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+            <h2 class="text-white text-2xl font-bold mb-2 group-hover:text-ciaRed transition-colors">${project.title}</h2>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4">${project.description}</p>
+            <div class="flex flex-wrap gap-2">
+              ${project.tech_stack.split(',').map(tech => `<span class="text-xs text-ciaRed border border-ciaRed/50 px-2 py-1">${tech.trim()}</span>`).join('')}
+            </div>
+            ${demoLink}
+          `;
 
-      container.appendChild(card);
-    });
-  })
-  .catch(err => console.error("Error:", err));
-  // your existing code (animations, cursor, etc...)
+          if (project.demo_link && !demoLink) {
+            card.onclick = () => window.open(project.demo_link, '_blank');
+          }
 
-
-// 🔥 PASTE HERE AT VERY BOTTOM
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  fetch("https://myportfolio-653w.onrender.com/api/projects")
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById("projects");
-
-      container.innerHTML = "";
-
-      data.forEach(project => {
-        const card = document.createElement("div");
-
-        card.className = "project-card border border-gray-800 p-4";
-
-        card.innerHTML = `
-          <h2 class="text-white text-xl">${project.title}</h2>
-          <p class="text-gray-400">${project.description}</p>
-        `;
-
-        container.appendChild(card);
-      });
-    })
-    .catch(err => console.error("Error:", err));
-
+          container.appendChild(card);
+        });
+      })
+      .catch(err => console.error("Error:", err));
 });
